@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>编辑文章</title>
+    <link rel="stylesheet" href="//cdn.bootcss.com/semantic-ui/2.1.8/semantic.min.css">
+    <link rel="stylesheet" href="/css/style.css">
+    <script src="//cdn.bootcss.com/jquery/1.11.3/jquery.min.js"></script>
+    <script src="//cdn.bootcss.com/semantic-ui/2.1.8/semantic.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="/css/wangEditor.min.css">
+    <script src="//cdn.rawgit.com/fdaciuk/ajax/v2.1.2/dist/ajax.min.js"></script>
+    <link rel="stylesheet" href="//cdn.bootcss.com/semantic-ui/2.1.8/semantic.min.css">
+    <link rel="stylesheet" href="/css/style.css">
+    <script src="//cdn.bootcss.com/jquery/1.11.3/jquery.min.js"></script>
+    <script src="//cdn.bootcss.com/semantic-ui/2.1.8/semantic.min.js"></script>
+
+    <style type="text/css">
+        #editor-trigger {
+            height: 500px;
+            /*max-height: 500px;*/
+        }
+        .container {
+            width: 100%;
+            margin: 0 auto;
+            position: relative;
+        }
+    </style>
+</head>  
+<body >
+    <%- include('components/nav') %>
+    <%- include('components/notification') %>
+
+    <div class="ui grid">
+      <div class="four wide column">
+        <a class="avatar"
+           href="/posts?author=<%= user._id %>"
+           data-title="<%= user.name %> | <%= ({m: '男', f: '女', x: '保密'})[user.gender] %>"
+           data-content="<%= user.bio %>">
+          <img class="avatar" src="/img/<%= user.avatar %>">
+        </a>
+      </div>
+
+      <div class="eight wide column">
+        <div class="ui form segment">
+          <div class="field required">
+            <label>标题</label>
+            <input type="text" name="title" id="title">
+          </div>
+          <div class="field required">
+            <label>内容</label>
+            <div id="editor-container" class="container">
+                <div id="editor-trigger"><p>请输入内容</p></div>
+            </div>
+            <p><br></p>
+          </div>
+          <button id="btn1" class="ui button">完成编辑</button>
+         </div>
+      </div>
+    </div>
+
+
+
+    
+    <script type="text/javascript" src="/js/lib/jquery-1.10.2.min.js"></script>
+    <script type="text/javascript" src="/js/wangEditor.js"></script>
+    <script type="text/javascript">
+        // 阻止输出log
+        // wangEditor.config.printLog = false;
+
+        var editor = new wangEditor('editor-trigger');
+        // 上传图片
+        editor.config.uploadImgUrl = '/editor';
+        editor.config.uploadParams = {
+            // token1: 'abcde',
+            // token2: '12345'
+        };
+        editor.config.uploadHeaders = {
+            // 'Accept' : 'text/x-json'
+        }
+        // editor.config.uploadImgFileName = 'myFileName';
+
+        // 隐藏网络图片
+        // editor.config.hideLinkImg = true;
+
+        // 表情显示项
+        editor.config.emotionsShow = 'value';
+        editor.config.emotions = {
+            'default': {
+                title: '默认',
+                data: './emotions.data'
+            },
+            'weibo': {
+                title: '微博表情',
+                data: [
+                    {
+                        icon: 'http://img.t.sinajs.cn/t35/style/images/common/face/ext/normal/7a/shenshou_thumb.gif',
+                        value: '[草泥马]'    
+                    },
+                    {
+                        icon: 'http://img.t.sinajs.cn/t35/style/images/common/face/ext/normal/60/horse2_thumb.gif',
+                        value: '[神马]'    
+                    },
+                    {
+                        icon: 'http://img.t.sinajs.cn/t35/style/images/common/face/ext/normal/bc/fuyun_thumb.gif',
+                        value: '[浮云]'    
+                    },
+                    {
+                        icon: 'http://img.t.sinajs.cn/t35/style/images/common/face/ext/normal/c9/geili_thumb.gif',
+                        value: '[给力]'    
+                    },
+                    {
+                        icon: 'http://img.t.sinajs.cn/t35/style/images/common/face/ext/normal/f2/wg_thumb.gif',
+                        value: '[围观]'    
+                    },
+                    {
+                        icon: 'http://img.t.sinajs.cn/t35/style/images/common/face/ext/normal/70/vw_thumb.gif',
+                        value: '[威武]'
+                    }
+                ]
+            }
+        };
+
+        // 插入代码时的默认语言
+        // editor.config.codeDefaultLang = 'html'
+
+        // 只粘贴纯文本
+        // editor.config.pasteText = true;
+
+        // 跨域上传
+        // editor.config.uploadImgUrl = 'http://localhost:8012/upload';
+
+        // 第三方上传
+        // editor.config.customUpload = true;
+
+        // 普通菜单配置
+        // editor.config.menus = [
+        //     'img',
+        //     'insertcode',
+        //     'eraser',
+        //     'fullscreen'
+        // ];
+        // 只排除某几个菜单（兼容IE低版本，不支持ES5的浏览器），支持ES5的浏览器可直接用 [].map 方法
+        // editor.config.menus = $.map(wangEditor.config.menus, function(item, key) {
+        //     if (item === 'insertcode') {
+        //         return null;
+        //     }
+        //     if (item === 'fullscreen') {
+        //         return null;
+        //     }
+        //     return item;
+        // });
+
+        // onchange 事件
+        editor.onchange = function () {
+            console.log(this.$txt.html());
+        };
+
+        // 取消过滤js
+        // editor.config.jsFilter = false;
+
+        // 取消粘贴过来
+        // editor.config.pasteFilter = false;
+
+        // 设置 z-index
+        // editor.config.zindex = 20000;
+
+        // 语言
+        // editor.config.lang = wangEditor.langs['en'];
+
+        // 自定义菜单UI
+        // editor.UI.menus.bold = {
+        //     normal: '<button style="font-size:20px; margin-top:5px;">B</button>',
+        //     selected: '.selected'
+        // };
+        // editor.UI.menus.italic = {
+        //     normal: '<button style="font-size:20px; margin-top:5px;">I</button>',
+        //     selected: '<button style="font-size:20px; margin-top:5px;"><i>I</i></button>'
+        // };
+        editor.create();
+
+        $('#btn1').click(()=>{
+            var html = editor.$txt.html();
+            var title = $('#title').val();
+            // console.log(title);
+            const request = ajax();
+            request.post('/posts/create',{title: title,content:html}).then((res)=>{
+                // console.log(res);
+                document.write(res);
+            })
+        });
+    </script>
+</body>
+</html>
